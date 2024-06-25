@@ -1,6 +1,6 @@
-# ditto_live_example
+# Ditto Flutter Demo App
 
-Demonstrates how to use the ditto_live plugin.
+Demonstrates how to use Ditto's peer-to-peer data sync within your Flutter Application.
 
 ## Getting Started
 
