@@ -1,13 +1,13 @@
-import 'package:demoapp_flutter/dialog.dart';
-import 'package:demoapp_flutter/dql_builder.dart';
-import 'package:demoapp_flutter/task.dart';
-import 'package:flutter/material.dart';
+import 'dialog.dart';
+import 'dql_builder.dart';
+import 'task.dart';
 
 import 'package:ditto_live/ditto_live.dart';
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appId = "YOUR_APP_ID";
-const token = "YOUR_PLAYGROUND_TOKEN";
+const appId = "caf9e870-d416-4b1c-9ab4-fb6e8319dd25";
+const token = "cb639c76-5633-44dd-ad28-03a5a43f092e";
 
 void main() => runApp(const MaterialApp(home: DittoExample()));
 
@@ -120,7 +120,7 @@ class _DittoExampleState extends State<DittoExample> {
         ditto: _ditto!,
         query: "SELECT * FROM tasks WHERE deleted = false",
         builder: (context, response) {
-          final tasks = response.results.map(Task.fromJson);
+          final tasks = response.items.map(Task.fromJson);
           return ListView(
             children: tasks.map(_singleTask).toList(),
           );
