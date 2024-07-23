@@ -105,8 +105,17 @@ class _DittoExampleState extends State<DittoExample> {
 
   Widget get _loading => Scaffold(
         appBar: AppBar(title: const Text("Ditto Tasks")),
-        body: const Center(
-          child: CircularProgressIndicator(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Center horizontally
+            children: [
+              const CircularProgressIndicator(),
+              const Text("Ensure your AppID and Token are correct"),
+              _portalInfo
+            ],
+          ),
         ),
       );
 
