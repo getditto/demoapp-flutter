@@ -1,15 +1,19 @@
-import 'package:demoapp_flutter/dialog.dart';
-import 'package:demoapp_flutter/dql_builder.dart';
-import 'package:demoapp_flutter/task.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
 import 'package:ditto_live/ditto_live.dart';
+import 'package:ditto_live_example/dialog.dart';
+import 'package:ditto_live_example/dql_builder.dart';
+import 'package:ditto_live_example/task.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appId = "YOUR_APP_ID";
-const token = "YOUR_PLAYGROUND_TOKEN";
+const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
+const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
 
-void main() => runApp(const MaterialApp(home: DittoExample()));
+Future<void> main() async {
+  runApp(const MaterialApp(home: DittoExample()));
+}
 
 class DittoExample extends StatefulWidget {
   const DittoExample({super.key});
@@ -38,11 +42,19 @@ class _DittoExampleState extends State<DittoExample> {
     ].request();
 
     final identity = await OnlinePlaygroundIdentity.create(
-      appId: appId,
+      appID: appID,
       token: token,
-      baseUrl: "https://$appId.cloud.ditto.live",
     );
-    final ditto = await Ditto.create(identity);
+
+    final dataDir = await getApplicationDocumentsDirectory();
+    final persistenceDirectory = Directory("${dataDir.path}/ditto");
+    await persistenceDirectory.create(recursive: true);
+
+    final ditto = await Ditto.open(
+      identity: identity,
+      persistenceDirectory: persistenceDirectory,
+    );
+
     await ditto.startSync();
 
     setState(() => _ditto = ditto);
@@ -52,14 +64,14 @@ class _DittoExampleState extends State<DittoExample> {
     final task = await showAddTaskDialog(context);
     if (task == null) return;
 
-    await _ditto!.execute(
+    await _ditto!.store.execute(
       "INSERT INTO tasks DOCUMENTS (:task)",
-      queryArgs: {"task": task.toJson()},
+      arguments: {"task": task.toJson()},
     );
   }
 
   Future<void> _clearTasks() async {
-    await _ditto!.execute("EVICT FROM tasks WHERE true");
+    await _ditto!.store.execute("EVICT FROM tasks WHERE true");
   }
 
   @override
@@ -83,6 +95,7 @@ class _DittoExampleState extends State<DittoExample> {
       body: Column(
         children: [
           _syncTile,
+          _portalInfo,
           const Divider(height: 1),
           Expanded(child: _tasksList),
         ],
@@ -111,16 +124,26 @@ class _DittoExampleState extends State<DittoExample> {
           } else {
             await _ditto!.stopSync();
           }
-
           setState(() => _syncing = value);
         },
       );
+
+  Widget get _portalInfo => const Column(children: [
+        Text(
+          "AppID: $appID",
+          style: TextStyle(fontSize: 12),
+        ),
+        Text(
+          "Token: $token",
+          style: TextStyle(fontSize: 12),
+        ),
+      ]);
 
   Widget get _tasksList => DqlBuilder(
         ditto: _ditto!,
         query: "SELECT * FROM tasks WHERE deleted = false",
         builder: (context, response) {
-          final tasks = response.results.map(Task.fromJson);
+          final tasks = response.items.map((r) => r.value).map(Task.fromJson);
           return ListView(
             children: tasks.map(_singleTask).toList(),
           );
@@ -130,7 +153,7 @@ class _DittoExampleState extends State<DittoExample> {
   Widget _singleTask(Task task) => Dismissible(
         key: Key("${task.id}-${task.title}"),
         onDismissed: (direction) async {
-          await _ditto!.execute(
+          await _ditto!.store.execute(
             "UPDATE tasks SET deleted = true WHERE _id = '${task.id}'",
           );
 
@@ -146,7 +169,7 @@ class _DittoExampleState extends State<DittoExample> {
           title: Text(task.title),
           subtitle: Text(task.description),
           value: task.done,
-          onChanged: (value) => _ditto!.execute(
+          onChanged: (value) => _ditto!.store.execute(
             "UPDATE tasks SET done = $value WHERE _id = '${task.id}'",
           ),
         ),
@@ -163,3 +186,20 @@ class _DittoExampleState extends State<DittoExample> {
         ),
       );
 }
+
+class Foo {
+  /// Doc 1
+  final String xxxx;
+
+  /// Doc 2
+  final String yyyy;
+
+  /// Parameter `zzzz` controls whether to go to space
+  Foo({
+    required this.xxxx,
+    required this.yyyy,
+    String zzzz = "hello",
+  });
+}
+
+void foo() {}
