@@ -24,7 +24,6 @@ class DittoExample extends StatefulWidget {
 
 class _DittoExampleState extends State<DittoExample> {
   Ditto? _ditto;
-  var _syncing = true;
 
   @override
   void initState() {
@@ -181,20 +180,3 @@ class _DittoExampleState extends State<DittoExample> {
         ),
       );
 }
-
-class Foo {
-  /// Doc 1
-  final String xxxx;
-
-  /// Doc 2
-  final String yyyy;
-
-  /// Parameter `zzzz` controls whether to go to space
-  Foo({
-    required this.xxxx,
-    required this.yyyy,
-    String zzzz = "hello",
-  });
-}
-
-void foo() {}
