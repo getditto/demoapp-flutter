@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
-const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
+const appID = "abb5556b-a89e-4f16-b4f7-0e19b8fa3495";
+const token = "31f5db64-81eb-47f1-92c9-84b0701d7629";
 
 Future<void> main() async {
   runApp(const MaterialApp(home: DittoExample()));
@@ -94,7 +94,6 @@ class _DittoExampleState extends State<DittoExample> {
       floatingActionButton: _fab,
       body: Column(
         children: [
-          _syncTile,
           _portalInfo,
           const Divider(height: 1),
           Expanded(child: _tasksList),
@@ -122,19 +121,6 @@ class _DittoExampleState extends State<DittoExample> {
   Widget get _fab => FloatingActionButton(
         onPressed: _addTask,
         child: const Icon(Icons.add_task),
-      );
-
-  Widget get _syncTile => SwitchListTile(
-        title: const Text("Syncing"),
-        value: _syncing,
-        onChanged: (value) async {
-          if (value) {
-            await _ditto!.startSync();
-          } else {
-            await _ditto!.stopSync();
-          }
-          setState(() => _syncing = value);
-        },
       );
 
   Widget get _portalInfo => const Column(children: [
