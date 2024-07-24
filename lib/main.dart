@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appID = "abb5556b-a89e-4f16-b4f7-0e19b8fa3495";
-const token = "31f5db64-81eb-47f1-92c9-84b0701d7629";
+const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
+const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
 
 Future<void> main() async {
   runApp(const MaterialApp(home: DittoExample()));

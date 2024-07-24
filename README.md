@@ -2,6 +2,8 @@
 
 This is a basic task application that demonstrates how to use Ditto's peer-to-peer data sync within your Flutter Application.
 
+![alt text](image.png)
+
 ## Getting Started
 
 ### 1. Clone the Repository
