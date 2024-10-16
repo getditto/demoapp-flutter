@@ -122,7 +122,6 @@ class _DittoExampleState extends State<DittoExample> {
       body: Column(
         children: [
           _portalInfo,
-          _syncTile,
           const Divider(height: 1),
           Expanded(child: _tasksList),
         ],
@@ -161,25 +160,6 @@ class _DittoExampleState extends State<DittoExample> {
           style: TextStyle(fontSize: 12),
         ),
       ]);
-
-
-  Widget get _syncTile => SwitchListTile(
-        title: const Text("Syncing"),
-        value: _syncing,
-        onChanged: (value) async {
-          if (value) {
-            print("starting sync");
-            await _ditto!.startSync();
-            print(await _ditto!.isSyncActive);
-          } else {
-            print("stopping sync");
-            await _ditto!.stopSync();
-            print(await _ditto!.isSyncActive);
-            print(_ditto!.isActivated);
-          }
-          setState(() => _syncing = value);
-        },
-      );
 
   Widget get _tasksList => DqlBuilder(
         ditto: _ditto!,
