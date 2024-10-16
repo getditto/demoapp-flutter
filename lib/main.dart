@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
-const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
+// Online with Authentication Creds
+const appID = "YOUR_APP_ID";
 
 Future<void> main() async {
   runApp(const MaterialApp(home: DittoExample()));
@@ -40,10 +40,30 @@ class _DittoExampleState extends State<DittoExample> {
       Permission.bluetoothScan
     ].request();
 
-    final identity = await OnlinePlaygroundIdentity.create(
-      appID: appID,
-      token: token,
+/**
+ *  START - Example with Online with Authentication hitting custom Big Peer cloud
+ */
+
+    final authenticationHandler = AuthenticationHandler(
+      authenticationRequired: (authenticator) {
+        print("authenticating");
+        authenticator.login(token: "manager01", provider: "replit-auth");
+      },
+      authenticationExpiringSoon: (authenticator, secondsRemaining) {
+        print("Auth token expiring in $secondsRemaining seconds");
+        authenticator.login(token: "manager01", provider: "replit-auth");
+      },
     );
+
+    final identity = await OnlineWithAuthenticationIdentity.create(
+      appID: appID,
+      authenticationHandler: authenticationHandler,
+      customAuthUrl: "https://$appID.cloud-dev.ditto.live" // Custom Big Peer endpoint
+      );
+
+/**
+ *  END - Example with Online Playground hitting cloud-dev & custom auth webhook
+ */
 
     final dataDir = await getApplicationDocumentsDirectory();
     final persistenceDirectory = Directory("${dataDir.path}/ditto");
@@ -53,6 +73,12 @@ class _DittoExampleState extends State<DittoExample> {
       identity: identity,
       persistenceDirectory: persistenceDirectory,
     );
+
+    // Using a custom transport config to specify the websocket endpoint of a custom Big Peer Endpoint
+    final peerToPeer = PeerToPeer.all();
+    final connect = Connect(webSocketUrls: {"wss://$appID.cloud-dev.ditto.live"});
+    final transportConfig = TransportConfig(peerToPeer: peerToPeer, connect: connect);
+    ditto.setTransportConfig(transportConfig);
 
     await ditto.startSync();
 
@@ -128,7 +154,7 @@ class _DittoExampleState extends State<DittoExample> {
           style: TextStyle(fontSize: 12),
         ),
         Text(
-          "Token: $token",
+          "Online With Authentication",
           style: TextStyle(fontSize: 12),
         ),
       ]);
