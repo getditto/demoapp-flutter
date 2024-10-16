@@ -24,7 +24,6 @@ class DittoExample extends StatefulWidget {
 
 class _DittoExampleState extends State<DittoExample> {
   Ditto? _ditto;
-  bool _syncing = false;
 
   @override
   void initState() {
@@ -82,7 +81,6 @@ class _DittoExampleState extends State<DittoExample> {
     ditto.setTransportConfig(transportConfig);
 
     await ditto.startSync();
-    _syncing = await ditto.isSyncActive;
 
     setState(() => _ditto = ditto);
   }
