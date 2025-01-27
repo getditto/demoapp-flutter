@@ -40,7 +40,7 @@ class _DittoExampleState extends State<DittoExample> {
       Permission.bluetoothScan
     ].request();
 
-    final identity = await OnlinePlaygroundIdentity.create(
+    final identity = OnlinePlaygroundIdentity(
       appID: appID,
       token: token,
     );
@@ -50,25 +50,25 @@ class _DittoExampleState extends State<DittoExample> {
     await persistenceDirectory.create(recursive: true);
 
     // Setup the Ditto Logger
-    DittoLogger.setMinimumLogLevel(LogLevel.debug);
-    DittoLogger.setEnabled(true);
-    DittoLogger.setCustomLogCallback((logLevel, logString) {
+    DittoLogger.minimumLogLevel = LogLevel.debug;
+    DittoLogger.isEnabled = true;
+    DittoLogger.customLogCallback = (logLevel, logString) {
       print("$logLevel: $logString");
 
       if (logLevel == LogLevel.error || logLevel == LogLevel.warning) {
         // if it's an error or a warning we'll dump all the logs to a new path
         DittoLogger.exportLogs('$dataDir/ditto_log_dump/$logLevel-${DateTime.now().toIso8601String()}');
       }
-    });
+    };
 
 
 
     final ditto = await Ditto.open(
       identity: identity,
-      persistenceDirectory: persistenceDirectory,
+      persistenceDirectory: persistenceDirectory.path,
     );
 
-    await ditto.startSync();
+    ditto.startSync();
 
     setState(() => _ditto = ditto);
   }
