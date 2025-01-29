@@ -105,7 +105,6 @@ Explore the following links and resources to learn more about Ditto:
 - [Ditto Documentation Site](https://docs.ditto.live)
 - [Ditto Flutter Install Guide](https://docs.ditto.live/flutter/installation)
 - [Ditto Flutter Quick Start](https://docs.ditto.live/flutter/installation)
-- [Ditto Flutter Roadmap](https://docs.ditto.live/flutter/roadmap)
 
 #### Technical Information
 - [Ditto Data Store CRUD](https://docs.ditto.live/crud/create)
