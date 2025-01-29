@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
-const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
+const appID = "0fab7e5b-3d91-422d-b3e8-4ac6125c3b1e";
+const token = "525817b6-274f-43f2-b03e-4f1396030f0c";
 
 Future<void> main() async {
   runApp(const MaterialApp(home: DittoExample()));
@@ -40,6 +40,7 @@ class _DittoExampleState extends State<DittoExample> {
       Permission.bluetoothScan
     ].request();
 
+    Ditto.init();
     final identity = OnlinePlaygroundIdentity(
       appID: appID,
       token: token,
@@ -60,7 +61,6 @@ class _DittoExampleState extends State<DittoExample> {
         DittoLogger.exportLogs('$dataDir/ditto_log_dump/$logLevel-${DateTime.now().toIso8601String()}');
       }
     };
-
 
 
     final ditto = await Ditto.open(
