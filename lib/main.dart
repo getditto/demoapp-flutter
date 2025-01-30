@@ -57,10 +57,10 @@ class _DittoExampleState extends State<DittoExample> {
 
       if (logLevel == LogLevel.error || logLevel == LogLevel.warning) {
         // if it's an error or a warning we'll dump all the logs to a new path
-        DittoLogger.exportLogs('$dataDir/ditto_log_dump/$logLevel-${DateTime.now().toIso8601String()}');
+        DittoLogger.exportLogs(
+            '$dataDir/ditto_log_dump/$logLevel-${DateTime.now().toIso8601String()}');
       }
     };
-
 
     final ditto = await Ditto.open(
       identity: identity,

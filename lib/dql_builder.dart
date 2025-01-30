@@ -29,21 +29,19 @@ class _DqlBuilderState extends State<DqlBuilder> {
   void initState() {
     super.initState();
 
-    final observer = widget.ditto.store
-        .registerObserver(
-          widget.query,
-          arguments: widget.queryArgs ?? {},
-        );
-    final subscription = widget.ditto.sync
-        .registerSubscription(
-          widget.query,
-          arguments: widget.queryArgs ?? {},
-        );
-    
+    final observer = widget.ditto.store.registerObserver(
+      widget.query,
+      arguments: widget.queryArgs ?? {},
+    );
+    final subscription = widget.ditto.sync.registerSubscription(
+      widget.query,
+      arguments: widget.queryArgs ?? {},
+    );
+
     setState(() {
       _observer = observer;
       _subscription = subscription;
-      });
+    });
   }
 
   @override
@@ -57,17 +55,15 @@ class _DqlBuilderState extends State<DqlBuilder> {
       _observer?.cancel();
       _subscription?.cancel();
 
-      final observer = widget.ditto.store
-          .registerObserver(
-            widget.query,
-            arguments: widget.queryArgs ?? {},
-          );
+      final observer = widget.ditto.store.registerObserver(
+        widget.query,
+        arguments: widget.queryArgs ?? {},
+      );
 
-      final subscription = widget.ditto.sync
-          .registerSubscription(
-            widget.query,
-            arguments: widget.queryArgs ?? {},
-          );
+      final subscription = widget.ditto.sync.registerSubscription(
+        widget.query,
+        arguments: widget.queryArgs ?? {},
+      );
       setState(() {
         _observer = observer;
         _subscription = subscription;
