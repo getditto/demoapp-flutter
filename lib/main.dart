@@ -10,7 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
 const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
-
 Future<void> main() async {
   runApp(const MaterialApp(home: DittoExample()));
 }
@@ -40,7 +39,8 @@ class _DittoExampleState extends State<DittoExample> {
       Permission.bluetoothScan
     ].request();
 
-    final identity = await OnlinePlaygroundIdentity.create(
+    await Ditto.init();
+    final identity = OnlinePlaygroundIdentity(
       appID: appID,
       token: token,
     );
@@ -49,12 +49,19 @@ class _DittoExampleState extends State<DittoExample> {
     final persistenceDirectory = Directory("${dataDir.path}/ditto");
     await persistenceDirectory.create(recursive: true);
 
+    // Setup the Ditto Logger
+    DittoLogger.minimumLogLevel = LogLevel.debug;
+    DittoLogger.isEnabled = true;
+    DittoLogger.customLogCallback = (logLevel, logString) {
+      print("$logLevel: $logString");
+    };
+
     final ditto = await Ditto.open(
       identity: identity,
-      persistenceDirectory: persistenceDirectory,
+      persistenceDirectory: persistenceDirectory.path,
     );
 
-    await ditto.startSync();
+    ditto.startSync();
 
     setState(() => _ditto = ditto);
   }
